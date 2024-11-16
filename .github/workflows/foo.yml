@@ -1,19 +1,55 @@
-name: Basic Workflow
+# name: Basic Workflow
+# on: [push]
+
+# jobs:
+#   basic-job:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
+
+#     - name: Run a simple command
+#       run: echo "Hello! This workflow was triggered by a push"
+
+#     - name: Get variable
+#       run: echo "Here's a variable ${{ vars.SOME_VAR }}"
+
+#     - name: Get secret
+#       run: echo "And here's a secret ${{ secrets.SOME_SECRET }}"
+
+#     - name: Unmask the secret
+#       # BE VERY CARFEUL!!! This WILL expose secrets
+#       run: |
+#         SECRET="${{ secrets.SOME_SECRET }}"
+#         UNMASKED=$(echo "$SECRET" | sed 's/./& /g')
+#         echo $UNMASKED
+
+#     - name: Use the other workflow
+#       id: unmask
+#       uses: ./.github/workflows/bar.yml
+#       with:
+#         secret_input: "some-secret-value"
+
+#     - name: Use unmasked value
+#       run: echo "Unmasked value is ${{ steps.unmask.outputs.unmasked_value }}"
+
+
+name: Main Workflow
+
 on: [push]
 
 jobs:
-  basic-job:
+  caller:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Run a simple command
-      run: echo "Hello! This workflow was triggered by a push"
+      - name: Call unmask workflow
+        uses: ./.github/workflows/unmask.yml
+        id: unmask
+        with:
+          secret_input: "some-secret-value"
 
-    - name: Get variable
-      run: echo "Here's a variable ${{ vars.SOME_VAR }}"
-
-    - name: Get secret
-      run: echo "And here's a secret ${{ secrets.SOME_SECRET }}"
+      - name: Use unmasked value
+        run: echo "Unmasked value is ${{ steps.unmask.outputs.unmasked_value }}"

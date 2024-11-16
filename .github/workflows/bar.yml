@@ -1,0 +1,25 @@
+name: Unmask Input
+
+on:
+  workflow_call:
+    inputs:
+      secret_input:
+        description: 'Input to unmask'
+        required: true
+        type: string
+    outputs:
+      unmasked_value:
+        description: "The unmasked value"
+        value: ${{ jobs.unmask.outputs.unmasked_value }}
+
+jobs:
+  unmask:
+    runs-on: ubuntu-latest
+    outputs:
+      unmasked_value: ${{ steps.unmask.outputs.value }}
+    steps:
+      - id: unmask
+        run: |
+          INPUT='${{ inputs.secret_input }}'
+          UNMASKED=$(echo "$INPUT" | sed 's/./& /g')
+          echo "value=$UNMASKED" >> $GITHUB_OUTPUT
