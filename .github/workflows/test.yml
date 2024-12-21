@@ -32,5 +32,5 @@ jobs:
       with:
         de-value: ${{ vars.SOME_VAR }}
 
-    - name: Print unmasked secret
+    - name: Print unmasked variable
       run: echo "(Calling workflow) ${{ steps.unmask-value.outputs.unmasked-value }}"
