@@ -11,6 +11,13 @@ outputs:
   unmasked-value:
     value: ${{ steps.unmask.outputs.unmasked-value }}
     description: 'An output value'
+  first-half:
+    value: ${{ steps.unmask.outputs.first-half }}
+    description: 'First half of the unmasked value'
+  second-half:
+    value: ${{ steps.unmask.outputs.second-half }}
+    description: 'Second half of the unmasked value'
+
 
 runs:
   using: 'composite'  # Can be 'composite', 'docker', or 'node16'
@@ -21,4 +28,16 @@ runs:
         echo "(Called action) The provided value is '${{ inputs.de-value }}'"
         UNMASKED=$(echo "${{ inputs.de-value }}" | sed 's/./& /g')
         echo "(Called action) The unmasked value is '$UNMASKED'"
+
+        LENGTH=$(echo "$UNMASKED" | tr -d ' ' | wc -c)
+        HALF_LENGTH=$(( LENGTH / 2 ))
+
+        FIRST_HALF=$(echo "$UNMASKED" | cut -c1-$HALF_LENGTH | sed 's/ *$//')
+        SECOND_HALF=$(echo "$UNMASKED" | cut -c$(($HALF_LENGTH + 1))- | sed 's/ *$//')
+
+        echo "(Called action) First half: '$FIRST_HALF'"
+        echo "(Called action) Second half: '$SECOND_HALF'"
+
         echo "unmasked-value=$UNMASKED" >> $GITHUB_OUTPUT
+        echo "first-half=$FIRST_HALF" >> $GITHUB_OUTPUT
+        echo "second-half=$SECOND_HALF" >> $GITHUB_OUTPUT

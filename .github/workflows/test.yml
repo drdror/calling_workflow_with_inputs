@@ -24,7 +24,10 @@ jobs:
 
     - name: Print unmasked secret
       # Fetching the output and printing it
-      run: echo "(Calling workflow) ${{ steps.unmask-secret.outputs.unmasked-value }}"
+      run: |
+        echo "(Calling workflow) Unmasked value is: ${{ steps.unmask-secret.outputs.unmasked-value }}"
+        echo "(Calling workflow) First half on unmasked value is: ${{ steps.unmask-secret.outputs.first-half }}"
+        echo "(Calling workflow) 2nd half on unmasked value is: ${{ steps.unmask-secret.outputs.second-half }}"
 
     - name: Same works for variables as well
       uses: ./.github/actions/unmask_secret
