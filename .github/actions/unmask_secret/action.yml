@@ -23,6 +23,7 @@ runs:
   using: 'composite'  # Can be 'composite', 'docker', or 'node16'
   steps:
     - name: Use input parameter
+      id: unmask
       shell: bash
       run: |
         echo "(Called action) The provided value is '${{ inputs.de-value }}'"
