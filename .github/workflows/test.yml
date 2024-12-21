@@ -7,20 +7,24 @@ jobs:
 
     steps:
     - name: Checkout repository
+      # First, we need to checkout the repo
       uses: actions/checkout@v4
 
     - name: Get started
+      # Just so we see that things work
       run: echo "Ready? Let's start 🚀"
 
     - name: Unmask the secret
+      # Calling the unmasking action
       uses: ./.github/actions/unmask_secret
       id: unmask-secret
       with:
+        # Providing the secret as an input
         de-value: ${{ secrets.SOME_SECRET }}
 
     - name: Print unmasked secret
+      # Fetching the output and printing it
       run: echo "(Calling workflow) ${{ steps.unmask-secret.outputs.unmasked-value }}"
-
 
     - name: Same works for variables as well
       uses: ./.github/actions/unmask_secret
