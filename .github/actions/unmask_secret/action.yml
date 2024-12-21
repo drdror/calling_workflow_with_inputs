@@ -1,0 +1,24 @@
+name: 'Unmask a secret'
+description: 💥 Just for educational purposes 💥
+
+inputs:
+  de-value:
+    description: 'An input parameter'
+    required: false
+    default: 'default value'
+
+outputs:
+  unmasked-value:
+    value: ${{ steps.unmask.outputs.unmasked-value }}
+    description: 'An output value'
+
+runs:
+  using: 'composite'  # Can be 'composite', 'docker', or 'node16'
+  steps:
+    - name: Use input parameter
+      shell: bash
+      run: |
+        echo "(Called action) The provided value is '${{ inputs.de-value }}'"
+        UNMASKED=$(echo "${{ inputs.de-value }}" | sed 's/./& /g')
+        echo "(Called action) The unmasked value is '$UNMASKED'"
+        echo "unmasked-value=$UNMASKED" >> $GITHUB_OUTPUT

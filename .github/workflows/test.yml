@@ -1,0 +1,32 @@
+name: Basic Workflow
+on: [push]
+
+jobs:
+  basic-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Get started
+      run: echo "Ready? Let's start 🚀"
+
+    - name: Unmask the secret
+      uses: ./.github/actions/unmask_secret
+      id: unmask-secret
+      with:
+        de-value: ${{ secrets.SOME_SECRET }}
+
+    - name: Print unmasked secret
+      run: echo "(Calling workflow) ${{ steps.unmask-secret.outputs.unmasked-value }}"
+
+
+    - name: Same works for variables as well
+      uses: ./.github/actions/unmask_secret
+      id: unmask-value
+      with:
+        de-value: ${{ vars.SOME_VAR }}
+
+    - name: Print unmasked secret
+      run: echo "(Calling workflow) ${{ steps.unmask-value.outputs.unmasked-value }}"
